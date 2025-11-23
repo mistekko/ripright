@@ -149,8 +149,10 @@ static void expandAndPrint(char      **out,
  * %C   = Artist, else album artist
  * %c   = Artist sort name, else album artist sort name
  * %D   = Album name (disc)
+ * %d   = Release date
  * %T   = Trackname
  * %Y   = Release type (album, single, compilation etc...)
+ * %y   = Release year (first four digits of %d)
  */
 char *Format(const char *prefix,
              const char *format,
@@ -160,6 +162,7 @@ char *Format(const char *prefix,
              const char *albumArtist,
              const char *albumArtistSort,
              const char *albumName,
+                   char *releaseDate,
              const char *trackName,
              const char *releaseType)
 {
@@ -223,12 +226,27 @@ char *Format(const char *prefix,
                 case 'D':
                     expandAndPrint(&out, &outLen, albumName, true);
                     break;
+                case 'd':
+                    expandAndPrint(&out, &outLen, releaseDate, true);
+                    break;
                 case 'T':
                     expandAndPrint(&out, &outLen, trackName, true);
                     break;
                 case 'Y':
                     expandAndPrint(&out, &outLen, releaseType, true);
                     break;
+                case 'y':
+                    if (strlen(releaseDate) > 3) /* in case of horrendous data on MB */
+                    {
+                        char c = releaseDate[4];
+                        releaseDate[4] = '\0';
+                        expandAndPrint(&out, &outLen, releaseDate, true);
+                        releaseDate[4] = c;
+                    }
+                    else
+                    {
+                        expandAndPrint(&out, &outLen, "0000", true);
+                    }
                 case '%':
                     expandAndPrint(&out, &outLen, "%", false);
                     break;
@@ -257,7 +275,7 @@ bool FormatIsValid(const char *format)
 {
     char *f;
 
-    f = Format(NULL, format, 0, "", "", "", "", "", "", "");
+    f = Format(NULL, format, 0, "", "", "", "", "", "", "", "");
     free(f);
 
     return f != NULL;
@@ -271,7 +289,7 @@ bool FormatIsValid(const char *format)
 
 int main(int argc, char *argv[])
 {
-    char *f = Format(argv[1], 1, "Artist", "AlbumArtist", "Al:bum", "TrackName", "ReleaseType");
+    char *f = Format(argv[1], 1, "Artist", "AlbumArtist", "Al:bum", "TrackName", "ReleaseType", "ReleaseDate");
 
     printf("%s\n", f ? f : "(null)");
 

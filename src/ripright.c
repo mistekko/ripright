@@ -242,6 +242,7 @@ static int doRip(void)
             {
                 const mbrelease_t *release = &mbresult.release[i];
                 char               albumTitle[1024];
+                char               releaseYear[5] = { 0 };
                 const char        *albumType = validReleaseTypes[0].path;
                 char              *outputPrefix;
 
@@ -299,6 +300,12 @@ static int doRip(void)
                     }
                 }
 
+		/* some tag readers prefer YEAR over DATE */
+		if(release->releaseDate)
+		{
+		    strncpy(releaseYear, release->releaseDate, 4);
+		}
+
                 /* Log some information about the CD */
                 if(release->albumArtist.artistName)
                 {
@@ -341,6 +348,13 @@ static int doRip(void)
                     }
 
                     EncTaskAddTag(etask, "ALBUM=%s", albumTitle);
+
+                    /* some tag readers prefer YEAR over DATE */
+                    if(*releaseYear)
+                    {
+                        EncTaskAddTag(etask, "DATE=%s", release->releaseDate);
+                        EncTaskAddTag(etask, "YEAR=%s", releaseYear);
+                    }
 
                     if(track->trackId)
                     {
@@ -409,6 +423,7 @@ static int doRip(void)
                                             release->albumArtist.artistName,
                                             release->albumArtist.artistNameSort,
                                             albumTitle,
+                                            release->releaseDate,
                                             track->trackName,
                                             albumType);
 
@@ -556,6 +571,7 @@ static void usage(void)
            "       %%c   = Track artist sort name if present, else album artist\n"
            "                sort name\n"
            "       %%D   = Album/CD name\n"
+           "       %%d   = Release date\n"
            "       %%T   = Trackname\n"
            "       %%Y   = Release type (album, single, EP, compilation etc...)\n"
            "       %%%%   = A single percent sign\n"

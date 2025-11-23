@@ -118,6 +118,7 @@ static void freeRelease(mbrelease_t *rel)
     free(rel->releaseId);
     free(rel->asin);
     free(rel->albumTitle);
+    free(rel->releaseDate);
     free(rel->releaseType);
 
     freeArtist(&rel->albumArtist);
@@ -166,6 +167,7 @@ static bool releasesAreIdentical(const mbrelease_t *ra, const mbrelease_t *rb)
        !artistsAreIdentical(&ra->albumArtist, &rb->albumArtist) ||
        strcheck(ra->releaseGroupId, rb->releaseGroupId) != 0 ||
        strcheck(ra->albumTitle, rb->albumTitle) != 0 ||
+       strcheck(ra->releaseDate, rb->releaseDate) !=0 ||
        strcheck(ra->releaseType, rb->releaseType) != 0 ||
        strcheck(ra->asin, rb->asin) != 0 ||
        !mediumsAreIdentical(&ra->medium, &rb->medium))
@@ -448,6 +450,13 @@ static uint16_t processReleaseNode(struct xmlnode *releaseNode, const char *disc
         XmlDestroy(&n);
     }
 
+    n = XmlFindSubNode(releaseNode, "date");
+    if(n)
+    {
+        cd->releaseDate = x_strdup(XmlGetContent(n));
+        XmlDestroy(&n);
+    }
+
     n = XmlFindSubNode(releaseNode, "release-group");
     if(n)
     {
@@ -652,6 +661,7 @@ void MbPrint(const mbresult_t *res)
         printf("Release=%s\n",           rel->releaseId);
         printf("  ASIN=%s\n",            rel->asin);
         printf("  Album=%s\n",           rel->albumTitle);
+        printf("  Date=%s\n",            rel->releaseDate);
         printf("  AlbumArtist=%s\n",     rel->albumArtist.artistName);
         printf("  AlbumArtistSort=%s\n", rel->albumArtist.artistNameSort);
         printf("  ReleaseType=%s\n",     rel->releaseType);

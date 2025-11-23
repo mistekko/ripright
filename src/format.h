@@ -53,6 +53,7 @@ char *Format(const char *prefix,
              const char *albumArtist,
              const char *albumArtistSort,
              const char *albumName,
+                   char *releaseDate,
              const char *trackName,
              const char *releaseType);
 

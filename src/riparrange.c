@@ -74,6 +74,7 @@ typedef struct
     char       *albumArtist;
     char       *albumArtistSort;
     char       *albumName;
+    char       *releaseDate;
     char       *trackName;
     char       *releaseType;
 }
@@ -515,6 +516,7 @@ int main(int argc, char *argv[])
                                  fi.albumArtist,
                                  fi.albumArtistSort,
                                  fi.albumName,
+                                 fi.releaseDate,
                                  fi.trackName,
                                  fi.releaseType);
 
