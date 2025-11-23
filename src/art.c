@@ -24,7 +24,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include <wand/MagickWand.h>
+#include <MagickWand/MagickWand.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -239,4 +239,3 @@ bool ArtDumpToFile(struct art *art, const char *filename)
 }
 
 /* END OF FILE */
-

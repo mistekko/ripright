@@ -17,7 +17,7 @@ PKG_PROG_PKG_CONFIG
 
 # Checks for libraries.
 PKG_CHECK_MODULES([flac], [flac >= 1.1.4])
-PKG_CHECK_MODULES([MagickWand], [Wand])
+PKG_CHECK_MODULES([MagickWand], [MagickWand])
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([libdiscid], [libdiscid])
 AC_CHECK_LIB([cdda_paranoia], [paranoia_init])
@@ -28,7 +28,7 @@ AC_CHECK_LIB([pthread], [pthread_create])
 flac_CFLAGS=`echo $flac_CFLAGS | $SED "s/FLAC$//"`
 
 # Check cdda-paranoia include location
-AC_CHECK_HEADERS([cdda_interface.h],, 
+AC_CHECK_HEADERS([cdda_interface.h],,
                  [AC_CHECK_HEADERS([cdda/cdda_interface.h], [], AC_MSG_ERROR([cannot find cdda_interface.h.  Please ensure the cdparanoia development package is installed or set CPPFLAGS and re-run configure]))])
 
 # Checks for header files.
